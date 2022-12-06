@@ -1,8 +1,8 @@
-
+import User from "./components/UserForm";
 
 function App() {
   return (
-    <div></div>
+    <User/>
   );
 }
 
