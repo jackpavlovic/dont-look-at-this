@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 const Card = styled.div`
   margin: auto;
-  text-align: center;
+  text-align: left;
   background-color: white;
   display: block;
   width: 500px;
