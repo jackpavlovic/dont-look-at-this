@@ -1,21 +1,18 @@
 import Card from "./UI/Card";
-import styled from "styled-components";
+import User from "./User";
 
-const Label = styled.label`
-  border: 1px solid grey; 
-  display: block;
-  padding: 2px 5px;
-  margin: 3px;
-`
+const UserList = (props) => {
+  if (props.usersArray.length === 0) {
+    return;
+  }
 
-const UserList = () => {
-  
   return (
     <Card>
-      <Label>Jack 30 years old</Label>
+      {props.usersArray.map((user) => (
+        <User username={user.username} age={user.age} key={user.id} />
+      ))}
     </Card>
-  )
-  
-}
+  );
+};
 
 export default UserList;

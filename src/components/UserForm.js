@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Card from "./UI/Card";
 import Button from "./UI/Button";
-import styled from 'styled-components'
+import styled from "styled-components";
+import ModalError from "./UI/ModalError";
 
 const ContentDiv = styled.div`
   text-align: left;
@@ -27,13 +28,16 @@ const ContentDiv = styled.div`
     background: beige;
     border-color: black;
   }
+`;
 
-`
-
-const User = () => {
+const UserForm = (props) => {
   const [enteredUsername, setEnteredUsername] = useState("");
   const [enteredAge, setEnteredAge] = useState("");
+  const [error, setError] = useState();
 
+  const discardErrorHandler = () => {
+    setError();
+  }
   const usernameChangeHandler = (event) => {
     setEnteredUsername(event.target.value);
   };
@@ -44,34 +48,55 @@ const User = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    console.log(enteredUsername, enteredAge);
-    const user = {
-      username: enteredUsername,
-      age: +enteredAge,
-    };
-
+    if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
+      setError({
+        title: "Invalid input",
+        message: "Please enter a valid name and age (non-empty values)."
+      })
+    } else if (+enteredAge <= 0) {
+      setError({
+        title: "Invalid age",
+        message: "Please enter a valid age (>0)"
+      })
+    } else {
+      const user = {
+        username: enteredUsername,
+        age: +enteredAge,
+        id: Math.random().toString(),
+      };
+      console.log(user);
+      props.onAddUser(user);
+    }
     setEnteredUsername("");
     setEnteredAge("");
   };
   return (
-    <Card>
-      <form onSubmit={submitHandler}>
-        <ContentDiv>
-          <label>Username</label>
-          <input
-            type="text"
-            onChange={usernameChangeHandler}
-            value={enteredUsername}
-          />
-        </ContentDiv>
-        <ContentDiv>
-          <label>Age(Years)</label>
-          <input type="number" onChange={ageChangeHandler} value={enteredAge} />
-        </ContentDiv>
-        <Button type="submit">Add User</Button>
-      </form>
-    </Card>
+    <div>
+      
+      {error && <ModalError title={error.title} message={error.message} onDiscardError={discardErrorHandler}/>}
+      <Card>
+        <form onSubmit={submitHandler}>
+          <ContentDiv>
+            <label>Username</label>
+            <input
+              type="text"
+              onChange={usernameChangeHandler}
+              value={enteredUsername}
+            />
+          </ContentDiv>
+          <ContentDiv>
+            <label>Age(Years)</label>
+            <input
+              type="number"
+              onChange={ageChangeHandler}
+              value={enteredAge}
+            />
+          </ContentDiv>
+          <Button type="submit">Add User</Button>
+        </form>
+      </Card>
+    </div>
   );
 };
 
-export default User;
+export default UserForm;
